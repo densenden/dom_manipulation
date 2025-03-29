@@ -3,7 +3,9 @@
 This repository contains a single HTML page demonstrating various fundamental Document Object Model (DOM) manipulation techniques using plain HTML, CSS, and JavaScript.
 
 <img width="1000" alt="Screenshot 2025-03-29 at 07 16 11_framer" src="https://github.com/user-attachments/assets/243d1d43-c80b-4de2-8302-8b1b09d67907" />
-[View Live](https://densenden.github.io/dom_manipulation/)
+
+<a href="https://densenden.github.io/dom_manipulation/" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #007bff; border-radius: 5px; text-decoration: none;">View Live</a>
+
 
 ## Features / Exercises Included:
 
