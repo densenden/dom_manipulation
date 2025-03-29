@@ -1,6 +1,8 @@
 # DOM Manipulation Exercises Showcase
 
-This repository contains a single HTML page (`exercises_combined.html`) demonstrating various fundamental Document Object Model (DOM) manipulation techniques using plain HTML, CSS, and JavaScript.
+This repository contains a single HTML page demonstrating various fundamental Document Object Model (DOM) manipulation techniques using plain HTML, CSS, and JavaScript.
+
+<img width="1000" alt="Screenshot 2025-03-29 at 07 16 11_framer" src="https://github.com/user-attachments/assets/243d1d43-c80b-4de2-8302-8b1b09d67907" />
 
 ## Features / Exercises Included:
 
