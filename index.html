@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Manipulation Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PT Sans', sans-serif;
+        }
+
+        :root {
+            --black: rgb(0, 0, 0);
+            --white: rgb(255, 255, 255);
+            --brown-dark: rgb(69, 41, 20);
+            --brown: rgb(174, 106, 55);
+            --beige: rgb(246, 226, 194);
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #333;
+            font-size: 2.5rem;
+        }
+
+        .image-gallery {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .image-gallery img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .image-gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .showcase-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .showcase-box h2 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+            min-height: 100px;
+            border: 1px dashed #ddd;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .gallery-grid img:hover {
+            transform: scale(1.05);
+        }
+
+        .color-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .color-option {
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            color: white;
+            text-align: center;
+        }
+
+        .white {
+            color: black;
+        }
+
+        .color-option:hover {
+            transform: scale(1.02);
+        }
+
+        .code-preview {
+            background: #1a1a1a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+            overflow-x: auto;
+        }
+
+        .code-preview pre {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.35rem;
+            color: #e0e0e0;
+            white-space: pre;
+        }
+
+        .toggle-code {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: auto;
+            font-size: 0.8rem;
+            align-self: flex-end;
+        }
+
+        .toggle-code:hover {
+            background: #444;
+        }
+
+        .url-input {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .example-content {
+            display: block;
+        }
+
+        .url-list {
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.5rem;
+        }
+
+        .url-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .url-item:last-child {
+            border-bottom: none;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.2rem;
+            transition: transform 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .color-select {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .color-select option {
+            padding: 0.5rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .button-group button {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            background: #333;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .button-group button:hover {
+            background: #444;
+        }
+
+        #styledParagraph {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .bigText {
+            font-size: 2em;
+        }
+
+        .colorfulBackground {
+            background-color: #ffeb3b;
+            color: #333;
+        }
+
+        .list-item button:hover {
+            background: #ff6666;
+        }
+
+        #clock {
+            font-size: 3rem;
+            font-family: 'IBM Plex Mono', monospace;
+            text-align: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DOM Manipulation Showcase</h1>
+        
+        <div class="showcase-grid">
+            <div class="showcase-box">
+                <h2>Text Change</h2>
+                <div class="example-content">
+                    <button id="changeTextButton">Click me to change the text below!</button>
+                    <p id="sampleText">This is the original text.</p>
+                </div>
+                <button class="toggle-code">Show Code</button>
+                <div class="code-preview">
+                    <pre>function changeText() {
+    document.getElementById("sampleText").innerText = "The text has been changed!";
+}</pre>
+                </div>
+            </div>
+
+            <div class="showcase-box">
+                <h2>Greeting</h2>
+                <div class="example-content">
+                    <input type="text" id="userName" placeholder="Enter your name">
+                    <div class="button-group">
+                        <button id="onClickGreetButton" onclick="greetWithOnClick()">👆 Greet with OnClick!</button>
+                        <button id="eventListenerGreetButton">🖱️ Greet with AddEventListener!</button>
+                    </div>
+                    <h2 id="greeting">Hello, World!</h2>
+                </div>
+                <button class="toggle-code">Show Code</button>
+                <div class="code-preview">
+                    <pre>// OnClick Method
+function greetWithOnClick() {
+    let userName = document.getElementById("userName").value;
+    displayGreeting(userName);
+}
+
+// AddEventListener Method
+document.getElementById("eventListenerGreetButton").addEventListener("click", function() {
+    let userName = document.getElementById("userName").value;
+    displayGreeting(userName);
+});
+
+function displayGreeting(userName) {
+    if (userName) {
+        document.getElementById("greeting").innerText = "Hello, " + userName + "!";
+    } else {
+        document.getElementById("greeting").innerText = "Hello, World!";
+    }
+}</pre>
+                </div>
+            </div>
+
+            <div class="showcase-box">
+                <h2>Background Color Change</h2>
+                <div class="example-content">
+                    <select id="colorPicker" class="color-select">
+                        <option value="var(--black)">Black</option>
+                        <option value="var(--white)">White</option>
+                        <option value="var(--brown-dark)">Dark Brown</option>
+                        <option value="var(--brown)">Brown</option>
+                        <option value="var(--beige)">Beige</option>
+                    </select>
+                    <button id="changeColorButton">🌈 Change Color</button>
+                </div>
+                <button class="toggle-code">Show Code</button>
+                <div class="code-preview">
+                    <pre>function changeBackgroundColor() {
+    let selectedColor = document.getElementById("colorPicker").value;
+    document.body.style.backgroundColor = selectedColor;
+}</pre>
+                </div>
+            </div>
+
+            <div class="showcase-box">
+                <h2>Image Grid</h2>
+                <div class="example-content">
+                    <div class="url-list">
+                        <div class="url-item" data-url="https://framerusercontent.com/images/nYFtwMlNxAkZunJLlbbOcxVaYew.png">
+                            <span>Sample Image URL 1</span>
+                            <button class="copy-btn">📋</button>
+                        </div>
+                        <div class="url-item" data-url="https://framerusercontent.com/images/CBIexyCp8hbX4kbnjFjCrWgjRpM.png">
+                            <span>Sample Image URL 2</span>
+                            <button class="copy-btn">📋</button>
+                        </div>
+                        <div class="url-item" data-url="https://framerusercontent.com/images/0EqHfhiU6VlAAY2YgaHAv2jMSw.png">
+                            <span>Sample Image URL 3</span>
+                            <button class="copy-btn">📋</button>
+                        </div>
+                        <div class="url-item" data-url="https://framerusercontent.com/images/9ba7WAPOfR06xzthfDZSyiYvY.png">
+                            <span>Sample Image URL 4</span>
+                            <button class="copy-btn">📋</button>
+                        </div>
+                    </div>
+                    <input type="text" id="imageUrl" placeholder="Enter image URL">
+                    <button id="addImageButton">📌 Add to Gallery</button>
+                    <div id="gallery" class="gallery-grid"></div>
+                </div>
+                <button class="toggle-code">Show Code</button>
+                <div class="code-preview">
+                    <pre>function addImageToGallery() {
+    let imageUrl = document.getElementById("imageUrl").value;
+    if (imageUrl) {
+        let newImage = document.createElement("img");
+        newImage.src = imageUrl;
+        document.getElementById("gallery").appendChild(newImage);
+        document.getElementById("imageUrl").value = "";
+    }
+}</pre>
+                </div>
+            </div>
+
+            <div class="showcase-box">
+                <h2>Dynamic Styles</h2>
+                <div class="example-content">
+                    <p id="styledParagraph">
+                        This is a paragraph that can be styled dynamically. Click the buttons below to see the magic happen! ✨
+                    </p>
+                    <div class="button-group">
+                        <button id="toggleTextSizeButton">🚀 Toggle Small Text</button>
+                        <button id="toggleBackgroundColorButton">🌈 Highlight Text</button>
+                    </div>
+                </div>
+                <button class="toggle-code">Show Code</button>
+                <div class="code-preview">
+                    <pre>// CSS Classes
+    .bigText {
+        font-size: 2em;
+    }
+    
+    .colorfulBackground {
+        background-color: #ffeb3b;
+    }
+    
+    // JavaScript Event Listeners
+    document.getElementById("toggleTextSizeButton").addEventListener("click", function() {
+        document.getElementById("styledParagraph").classList.toggle("bigText");
+    });
+    
+    document.getElementById("toggleBackgroundColorButton").addEventListener("click", function() {
+        document.getElementById("styledParagraph").classList.toggle("colorfulBackground");
+    });</pre>
+                </div>
+            </div>
+
+            <!-- Clock Box -->
+            <div class="showcase-box">
+                <h2>Clock</h2>
+                <div class="example-content">
+                    <div id="clock">00:00:00</div>
+                    <div class="button-group">
+                        <button id="stopClockButton">Stop Clock</button>
+                    </div>
+                </div>
+                <button class="toggle-code">Show Code</button>
+                <div class="code-preview">
+                    <pre>// HTML
+&lt;div id="clock"&gt;00:00:00&lt;/div&gt;
+&lt;button id="stopClockButton"&gt;Stop Clock&lt;/button&gt;
+
+// JavaScript
+let clockInterval;
+const clockElement = document.getElementById('clock');
+
+function formatTime(num) {
+    return num < 10 ? '0' + num : num;
+}
+
+function updateTime() {
+    const now = new Date();
+    const hours = formatTime(now.getHours());
+    const minutes = formatTime(now.getMinutes());
+    const seconds = formatTime(now.getSeconds());
+    clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+}
+
+function startClock() {
+    if (!clockInterval) { // Prevent multiple intervals
+        updateTime(); // Initial display
+        clockInterval = setInterval(updateTime, 1000);
+    }
+}
+
+function stopClock() {
+    clearInterval(clockInterval);
+    clockInterval = null; // Reset interval variable
+}
+
+document.getElementById('stopClockButton').addEventListener('click', stopClock);
+
+// Start the clock initially
+startClock();</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    alert("Hello, World!");
+
+        function changeText() {
+            document.getElementById("sampleText").innerText = "The text has been changed!";
+        }
+        document.getElementById("changeTextButton").onclick = changeText;
+
+        function addImageToGallery() {
+            let imageUrl = document.getElementById("imageUrl").value;
+            if (imageUrl) {
+                let newImage = document.createElement("img");
+                newImage.src = imageUrl;
+                document.getElementById("gallery").appendChild(newImage);
+                document.getElementById("imageUrl").value = "";
+            }
+        }
+        document.getElementById("addImageButton").onclick = addImageToGallery;
+
+        function greetWithOnClick() {
+            let userName = document.getElementById("userName").value;
+            displayGreeting(userName);
+        }
+
+        function displayGreeting(userName) {
+            if (userName) {
+                document.getElementById("greeting").innerText = "Hello, " + userName + "!";
+            } else {
+                document.getElementById("greeting").innerText = "Hello, World!";
+            }
+        }
+
+        document.getElementById("eventListenerGreetButton").addEventListener("click", function() {
+            let userName = document.getElementById("userName").value;
+            displayGreeting(userName);
+        });
+
+        function changeBackgroundColor() {
+            let selectedColor = document.getElementById("colorPicker").value;
+            document.body.style.backgroundColor = selectedColor;
+        }
+        document.getElementById("changeColorButton").onclick = changeBackgroundColor;
+
+        // Code toggle functionality
+        document.querySelectorAll('.toggle-code').forEach(button => {
+            button.addEventListener('click', function() {
+                const exampleContent = this.previousElementSibling;
+                const codePreview = this.nextElementSibling;
+                if (exampleContent.style.display === 'block') {
+                    exampleContent.style.display = 'none';
+                    codePreview.style.display = 'block';
+                    this.textContent = 'Show Example';
+                } else {
+                    exampleContent.style.display = 'block';
+                    codePreview.style.display = 'none';
+                    this.textContent = 'Show Code';
+                }
+            });
+        });
+
+        // URL Copy functionality
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.parentElement.dataset.url;
+                navigator.clipboard.writeText(url).then(() => {
+                    const originalText = this.textContent;
+                    this.textContent = '✓';
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                    }, 1000);
+                });
+            });
+        });
+
+        // Dynamic Styles functionality
+        const textButton = document.getElementById("toggleTextSizeButton");
+        const bgButton = document.getElementById("toggleBackgroundColorButton");
+        const paragraph = document.getElementById("styledParagraph");
+
+        textButton.addEventListener("click", function() {
+            paragraph.classList.toggle("bigText");
+            this.textContent = paragraph.classList.contains("bigText") ? "🚀 Toggle Small Text" : "🚀 Toggle Big Text";
+        });
+
+        bgButton.addEventListener("click", function() {
+            paragraph.classList.toggle("colorfulBackground");
+            this.textContent = paragraph.classList.contains("colorfulBackground") ? "🌈 Remove Text Highlight" : "🌈 Highlight Text";
+        });
+
+        // --- Clock Functionality --- 
+        let clockInterval;
+        const clockElement = document.getElementById('clock');
+        const stopClockButton = document.getElementById('stopClockButton');
+
+        function formatTime(num) {
+            // Add leading zero if number is less than 10
+            return num < 10 ? '0' + num : num;
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const hours = formatTime(now.getHours());
+            const minutes = formatTime(now.getMinutes());
+            const seconds = formatTime(now.getSeconds());
+            if (clockElement) { // Check if element exists
+               clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+            }
+        }
+
+        function startClock() {
+             if (!clockInterval) { // Prevent multiple intervals
+                updateTime(); // Update time immediately
+                clockInterval = setInterval(updateTime, 1000); // Update every second
+                if(stopClockButton) stopClockButton.textContent = "Stop Clock";
+             }
+        }
+
+        function stopClock() {
+            clearInterval(clockInterval);
+            clockInterval = null; // Reset interval variable
+            if(stopClockButton) stopClockButton.textContent = "Resume Clock"; // Optional: Change button text
+        }
+
+        // Add event listener to the button
+        if (stopClockButton) {
+             stopClockButton.addEventListener('click', () => {
+                 if (clockInterval) {
+                     stopClock();
+                 } else {
+                     startClock(); // Allow restarting the clock
+                 }
+             });
+        }
+
+        // Initialize the clock when the script runs
+        startClock();
+        // --- End Clock Functionality ---
+    </script>
+</body>
+</html>
